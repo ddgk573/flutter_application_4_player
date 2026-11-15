@@ -4,8 +4,7 @@
 .pub/
 build/
 
-core/constants/test_assets/test_assets/
-lib/core/constants/test_assets/test_assets/
+/lib/core/constants/test_assets/
 
 .metadata
 
