@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screen = [
     PlayListScreen(),
     SearchScreen(),
-    PlayScreen(),
+    PlayerScreen(),
     SettingsScreen(),
     AccountScreen(),
   ];
