@@ -4,6 +4,7 @@
 .pub/
 build/
 
+test/test_assets
 
 .metadata
 

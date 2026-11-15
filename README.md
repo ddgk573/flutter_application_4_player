@@ -5,30 +5,46 @@ Flutter-приложение с нижней навигацией между э�
 
 ## Архитектура
 
+В проекте используется упрощённая архитектура с разделением на слои:
+
+- `lib/main.dart` — точка входа приложения и корневой виджет `MyApp`.
+- `lib/screens` — UI-экраны навигации и экранов приложения.
+- `lib/features` — доменная/функциональная логика, например воспроизведение аудио.
+- `lib/core/constants` — общие темы и константы.
+- `lib/data` — подготовленный слой данных/БД для дальнейшего расширения.
+
 ```mermaid
 flowchart TD
-    main["main()"] --> app["MyApp"]
-    app --> notifier["themeNotifier<br/>ValueNotifier&lt;ThemeMode&gt;"]
+    main["main.dart\nrunApp()"] --> app["MyApp"]
     app --> material["MaterialApp"]
-    themes["AppTheme<br/>lightTheme / darkTheme"] --> material
-    notifier --> material
+    app --> themeState["themeNotifier\nValueNotifier<ThemeMode>"]
     material --> home["MyHomePage"]
 
+    themeState --> material
+
     home --> scaffold["Scaffold"]
-    scaffold --> body["Текущий экран"]
     scaffold --> nav["BottomNavigationBar"]
     nav -->|"выбирает индекс"| home
+    scaffold --> body["_screen[currentIndex]"]
+    screens["UI-слой\nlib/screens"] --> body
 
     body --> playlists["PlayListScreen"]
     body --> search["SearchScreen"]
-    body --> player["PlayerScreen<br/>(экран по умолчанию)"]
+    body --> player["PlayerScreen"]
     body --> settings["SettingsScreen"]
     body --> account["AccountScreen"]
 
-    settings -->|"читает и меняет режим"| notifier
+    settings -->|"читает и меняет тему"| themeState
 
-    database["data/databas.dart<br/>(пока не подключён)"]
-    database -.->|"нет связей в текущей реализации"| home
+    player --> feature["features/player/player.dart\nPlayAudio"]
+    feature --> audio["audioplayers"]
+    feature --> audioPath["core/constants/constants.dart\ntest_audio_path"]
+
+    material --> theme["core/constants/themes.dart\nAppTheme"]
+    theme --> light["lightTheme"]
+    theme --> dark["darkTheme"]
+
+    data["data/databas.dart"] -.->|"планируется для хранения данных"| screens
 ```
 
 ## Getting Started
