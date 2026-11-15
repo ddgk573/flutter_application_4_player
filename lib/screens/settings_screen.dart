@@ -15,23 +15,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Тёмная тема:', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 12),
-              ValueListenableBuilder<ThemeMode>(
-                valueListenable: themeNotifier,
-                builder: (_, currentMode, _) {
-                  return Switch(
-                    value: currentMode == ThemeMode.dark,
-                    onChanged: (bool isDark) {
-                      themeNotifier.value = isDark
-                          ? ThemeMode.dark
-                          : ThemeMode.light;
+          Column(
+            textDirection: TextDirection.ltr,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Тёмная тема:', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: 12),
+                  ValueListenableBuilder<ThemeMode>(
+                    valueListenable: themeNotifier,
+                    builder: (_, currentMode, _) {
+                      return Switch(
+                        value: currentMode == ThemeMode.dark,
+                        onChanged: (bool isDark) {
+                          themeNotifier.value = isDark
+                              ? ThemeMode.dark
+                              : ThemeMode.light;
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                ],
               ),
             ],
           ),
