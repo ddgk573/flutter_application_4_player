@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_4_player/core/constants/themes.dart';
 import 'package:flutter_application_4_player/screens/settings_screen.dart';
 import 'package:flutter_application_4_player/screens/player_screen.dart';
+import 'package:flutter_application_4_player/screens/search_screen.dart';
+import 'package:flutter_application_4_player/screens/play_list_screen.dart';
+import 'package:flutter_application_4_player/screens/account_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,11 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentScreen = 2;
 
   final List<Widget> _screen = [
-    Center(child: Text('Playlists')),
-    Center(child: Text('Search')),
+    PlayListScreen(),
+    SearchScreen(),
     PlayScreen(),
     SettingsScreen(),
-    Center(child: Text('Profile')),
+    AccountScreen(),
   ];
 
   @override
@@ -58,7 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: _screen[_currentScreen],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentScreen,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: (index) {
           setState(() {
             _currentScreen = index;
