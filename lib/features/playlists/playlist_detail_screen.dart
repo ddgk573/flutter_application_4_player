@@ -5,7 +5,7 @@ import 'package:flutter_application_4_player/features/player/player.dart';
 import 'package:flutter_application_4_player/widgets/song_cover.dart';
 
 class PlaylistDetailScreen extends StatelessWidget {
-  final int? playlistId; // null = «Все песни»
+  final int? playlistId; // null = Все песни
   final String title;
   const PlaylistDetailScreen({
     super.key,
@@ -23,7 +23,7 @@ class PlaylistDetailScreen extends StatelessWidget {
     int start,
   ) async {
     await PlayerController.instance.playQueue(songs, start);
-    currentTab.value = 0; // вкладка с плеером
+    currentTab.value = 0;
     if (context.mounted) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }

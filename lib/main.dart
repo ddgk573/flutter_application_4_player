@@ -3,9 +3,7 @@ import 'package:flutter_application_4_player/core/app_state.dart';
 import 'package:flutter_application_4_player/core/constants/themes.dart';
 import 'package:flutter_application_4_player/screens/settings_screen.dart';
 import 'package:flutter_application_4_player/screens/player_screen.dart';
-import 'package:flutter_application_4_player/screens/search_screen.dart';
 import 'package:flutter_application_4_player/screens/play_list_screen.dart';
-import 'package:flutter_application_4_player/screens/account_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,10 +43,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screen = const [
     PlayListScreen(),
-    SearchScreen(),
     PlayerScreen(),
     SettingsScreen(),
-    AccountScreen(),
   ];
 
   @override
@@ -73,20 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: 'Playlists',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: 'Search',
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.play_circle_fill),
                 label: 'Play',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
                 label: 'Settings',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
               ),
             ],
           ),
