@@ -9,10 +9,14 @@ class PlayerController extends ChangeNotifier {
       isPlaying = s == PlayerState.playing;
       notifyListeners();
     });
+    _player.onPositionChanged.listen((p) => position.value = p);
+    _player.onDurationChanged.listen((d) => duration.value = d);
   }
   static final PlayerController instance = PlayerController._();
 
   final AudioPlayer _player = AudioPlayer();
+  final ValueNotifier<Duration> position = ValueNotifier(Duration.zero);
+  final ValueNotifier<Duration> duration = ValueNotifier(Duration.zero);
   List<SongView> queue = [];
   int index = -1;
   bool isPlaying = false;
@@ -25,9 +29,15 @@ class PlayerController extends ChangeNotifier {
     await _playAt(start);
   }
 
+  Future<void> seek(Duration to) => _player.seek(to);
+
   Future<void> _playAt(int i) async {
     if (i < 0 || i >= queue.length) return;
+
     index = i;
+    position.value = Duration.zero;
+    duration.value = Duration.zero;
+
     notifyListeners();
     final path = queue[i].audioPath;
     if (path == null) {

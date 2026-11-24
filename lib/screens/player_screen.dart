@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_4_player/data/database.dart';
 import 'package:flutter_application_4_player/features/player/player.dart';
 import 'package:flutter_application_4_player/widgets/song_cover.dart';
+import 'package:flutter_application_4_player/widgets/seek_bar.dart';
 
 class PlayerScreen extends StatelessWidget {
   const PlayerScreen({super.key});
@@ -24,6 +25,7 @@ class PlayerScreen extends StatelessWidget {
             ),
             if (song != null) Text(song.authorName),
             const SizedBox(height: 8),
+            const SeekBar(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -1,7 +1,7 @@
 # Wave Player
 
-Flutter-приложение с нижней навигацией между экранами плеера, поиска,
-плейлистов, настроек и профиля.
+Flutter-приложение с нижней навигацией между экранами плейлистов,
+плеера и настроек.
 
 ## Архитектура
 
@@ -22,30 +22,35 @@ flowchart TD
     appTheme["AppTheme\nlightTheme / darkTheme"] --> material
     material --> home["MyHomePage"]
 
-    home --> tabState["currentTab\ncore/app_state.dart"]
+    home --> tabState["currentTab\ncore/app_state.dart\nиндексы: 0 Playlists, 1 Player, 2 Settings"]
     tabState --> nav["BottomNavigationBar"]
     nav -->|"меняет выбранную вкладку"| tabState
     home --> screenList["_screen[currentTab]"]
     screenList --> playlists["PlayListScreen"]
-    screenList --> search["SearchScreen\nзаготовка"]
     screenList --> playerScreen["PlayerScreen"]
     screenList --> settings["SettingsScreen"]
-    screenList --> account["AccountScreen\nзаготовка"]
     settings -->|"читает и меняет"| themeNotifier
 
     playlists -->|"открывает"| playlistDetail["PlaylistDetailScreen"]
     playlists -->|"создаёт песню"| addSong["AddSongDialog"]
+    playlistDetail -->|"добавляет песню в плейлист"| addSong
     playlistDetail -->|"список песен и плейлистов"| db["db · AppDatabase"]
     addSong -->|"сохраняет песню"| db
     addSong -->|"выбор и копирование аудио/обложки"| fileStorage["FilePicker\nApplication Documents"]
+    addSong -->|"читает название, автора и встроенную обложку"| metadata["metadata_reader.dart\nIsolate"]
+    metadata -->|"SongMetadata"| addSong
 
     playerScreen -->|"список песен"| db
-    playlistDetail -->|"playQueue()"| controller["PlayerController\nfeatures/player/player.dart"]
+    playlistDetail -->|"playQueue()"| controller["PlayerController\nfeatures/player/player.dart\nSingleton"]
     playerScreen -->|"управление плеером"| controller
     controller -->|"play / pause / next / prev"| audioPlayer["AudioPlayer · audioplayers"]
     controller -->|"увеличивает счётчик прослушиваний"| db
+    controller -->|"текущая песня и очередь"| playerScreen
+    controller -->|"позиция и длительность"| seekBar["SeekBar"]
+    seekBar -->|"seek()"| controller
     playerScreen --> songCover["SongCover"]
     playlistDetail --> songCover
+    addSong --> songCover
 
     subgraph database["Схема Drift · data/database.dart"]
         authors["Authors\nid, name"]
