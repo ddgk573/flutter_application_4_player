@@ -6,6 +6,7 @@ import 'package:flutter_application_4_player/screens/player_screen.dart';
 import 'package:flutter_application_4_player/screens/play_list_screen.dart';
 
 void main() {
+  loadSwipeSettings();
   runApp(const MyApp());
 }
 

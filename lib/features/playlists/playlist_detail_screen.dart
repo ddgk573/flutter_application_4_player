@@ -3,6 +3,7 @@ import 'package:flutter_application_4_player/core/app_state.dart';
 import 'package:flutter_application_4_player/data/database.dart';
 import 'package:flutter_application_4_player/features/player/player.dart';
 import 'package:flutter_application_4_player/widgets/song_cover.dart';
+import 'package:flutter_application_4_player/widgets/swipe_song_tile.dart';
 
 class PlaylistDetailScreen extends StatelessWidget {
   final int? playlistId; // null = Все песни
@@ -64,17 +65,7 @@ class PlaylistDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: [
-          if (playlistId != null)
-            IconButton(
-              tooltip: 'Добавить песни',
-              icon: const Icon(Icons.playlist_add),
-              onPressed: () => _addSongs(context),
-            ),
-        ],
-      ),
+      appBar: AppBar(title: Text(title)),
       body: StreamBuilder<List<SongView>>(
         stream: _stream,
         builder: (context, snap) {
@@ -99,10 +90,9 @@ class PlaylistDetailScreen extends StatelessWidget {
                     ? const Center(child: Text('Здесь пока нет песен'))
                     : ListView.builder(
                         itemCount: songs.length,
-                        itemBuilder: (_, i) => ListTile(
-                          leading: SongCover(path: songs[i].coverPath),
-                          title: Text(songs[i].songName),
-                          subtitle: Text(songs[i].authorName),
+                        itemBuilder: (_, i) => SwipeSongTile(
+                          song: songs[i],
+                          currentPlaylistId: playlistId,
                           onTap: () => _play(context, songs, i),
                           trailing: playlistId == null
                               ? null
@@ -121,6 +111,13 @@ class PlaylistDetailScreen extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: playlistId == null
+          ? null
+          : FloatingActionButton(
+              tooltip: 'Добавить песню из библиотеки',
+              onPressed: () => _addSongs(context),
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_4_player/data/database.dart';
 import 'package:flutter_application_4_player/features/playlists/add_song_dialog.dart';
 import 'package:flutter_application_4_player/features/playlists/playlist_detail_screen.dart';
+import 'package:flutter_application_4_player/core/app_state.dart';
 
 class PlayListScreen extends StatelessWidget {
   const PlayListScreen({super.key});
 
   void _open(BuildContext context, int? id, String title) {
+    if (id != null) setLastPlaylist(id);
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => PlaylistDetailScreen(playlistId: id, title: title),

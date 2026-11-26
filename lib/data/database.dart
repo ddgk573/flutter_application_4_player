@@ -98,6 +98,15 @@ class AppDatabase extends _$AppDatabase {
     updates: {playlists},
   );
 
+  Future<bool> playlistExists(int playlistId) async {
+    final row = await customSelect(
+      'SELECT COUNT(*) AS count FROM playlists WHERE id = ?',
+      variables: [Variable.withInt(playlistId)],
+      readsFrom: {playlists},
+    ).getSingle();
+    return row.read<int>('count') > 0;
+  }
+
   Stream<List<QueryRow>> watchPlaylists() => customSelect(
     '''
       SELECT p.id, p.name, p.cover_path, COUNT(ps.song_id) AS songs_count
@@ -125,19 +134,26 @@ class AppDatabase extends _$AppDatabase {
     ).watch().map((rows) => rows.map(SongView.fromRow).toList());
   }
 
-  Future<int> addSongToPlaylist(int playlistId, int songId) => customInsert(
-    '''
-      INSERT OR IGNORE INTO playlist_songs (playlist_id, song_id, position)
-      VALUES (?, ?, (SELECT COALESCE(MAX(position), -1) + 1
-                     FROM playlist_songs WHERE playlist_id = ?))
-      ''',
-    variables: [
-      Variable.withInt(playlistId),
-      Variable.withInt(songId),
-      Variable.withInt(playlistId),
-    ],
-    updates: {playlistSongs},
-  );
+  Future<bool> addSongToPlaylist(int playlistId, int songId) {
+    return transaction(() async {
+      await customInsert(
+        '''
+        INSERT OR IGNORE INTO playlist_songs (playlist_id, song_id, position)
+        VALUES (?, ?, (SELECT COALESCE(MAX(position), -1) + 1
+                       FROM playlist_songs WHERE playlist_id = ?))
+        ''',
+        variables: [
+          Variable.withInt(playlistId),
+          Variable.withInt(songId),
+          Variable.withInt(playlistId),
+        ],
+        updates: {playlistSongs},
+      );
+      final result = await customSelect('SELECT changes() AS changed')
+          .getSingle();
+      return result.read<int>('changed') == 1;
+    });
+  }
 
   Future<int> removeSongFromPlaylist(int playlistId, int songId) =>
       customUpdate(
